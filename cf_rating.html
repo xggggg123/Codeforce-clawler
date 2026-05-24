@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Codeforces Rating 走势图</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts/dist/echarts.min.js"></script>
+</head>
+<body style="margin: 0; padding: 0;"> //不留白
+    <div id="main" style="width: 100vw; height: 100vh;"></div>
+
+    <script>
+        const contestData = `
+//数据放在这
+
+`;
+
+        const lines = contestData.trim().split('\n'); //创建空数组
+        const times = [];
+        const ratings = [];
+        const colors = [];
+
+        lines.forEach(line => {
+            const parts = line.split(' ');//将数据切开
+            if (parts.length < 4) return; 
+            const newRating = parseInt(parts[parts.length - 2]);  //parts表示多少段 
+
+            times.push(parts.slice(0, parts.length - 3).join(' ')); //切去数字部分
+            ratings.push(newRating);
+
+            if (newRating < 1200) colors.push('#808080'); //颜色
+            else if (newRating < 1400) colors.push('#008000');
+            else if (newRating < 1600) colors.push('#03A89E');
+            else if (newRating < 1900) colors.push('#0000FF');
+            else if (newRating < 2100) colors.push('#AA00AA');
+            else if (newRating < 2300) colors.push('#FF8C00');
+            else colors.push('#FF0000');
+        });
+
+        const myChart = echarts.init(document.getElementById('main'));
+        myChart.setOption({
+            title: { text: 'Codeforces Rating 走势图', left: 'center' },
+            tooltip: {
+                trigger: 'axis', //鼠标移到坐标轴上就触发提示
+                formatter: params => {
+                    const idx = params[0].dataIndex; //拿到当前鼠标指的是第几个数据点
+                    return `比赛：${times[idx]}<br>Rating：${ratings[idx]}`;
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: times.map((_, i) => `第${i+1}场`),
+                axisLabel: { rotate: 45, interval: 10 }
+            },
+            yAxis: { type: 'value', name: 'Rating' },
+            series: [{
+                type: 'line',
+                data: ratings,
+                itemStyle: { color: p => colors[p.dataIndex] },
+                lineStyle: { color: '#2f4f4f' },
+                symbol: 'circle',
+                symbolSize: 4
+            }]
+        });
+    </script>
+</body>
+</html>
