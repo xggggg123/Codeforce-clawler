@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang='zh-CN'>
+<head>
+<meta charset='GBK'>
+<title>C语言ECharts图表</title>
+<script src='https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.min.js'></script>
+<style>#main{width:800px;height:500px;}</style>
+</head>
+<body>
+<div id='main'></div>
+<script>
+var myChart = echarts.init(document.getElementById('main'));
+var option = {
+title:{text:'数据统计图表'},
+xAxis:{data:['一月','二月','三月','四月']},
+yAxis:{},
+series:[{name:'销量',type:'bar',data:[120,200,150,80]}]
+};
+myChart.setOption(option);
+</script>
+</body>
+</html>
